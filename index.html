@@ -14,14 +14,15 @@ header p{margin:0;font-size:14px;color:#C9D3DC}
 nav{display:flex;gap:8px;flex-wrap:wrap}
 nav button{font:inherit;font-size:16px;font-weight:600;padding:10px 18px;border-radius:999px;border:2px solid #3A4658;background:transparent;color:var(--paper);cursor:pointer}
 nav button[aria-selected="true"]{background:var(--paper);color:var(--ink);border-color:var(--paper)}
-main{max-width:1240px;margin:0 auto;padding:24px}
+main{max-width:1600px;margin:0 auto;padding:14px 24px}
 section.view{display:none}
 section.view.active{display:block}
-h2{font-size:30px;margin:0 0 4px}
-.sub{color:var(--soft);margin:0 0 20px}
-.grid{display:grid;grid-template-columns:minmax(300px,440px) 1fr;gap:24px;align-items:start}
+.vhead{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 16px;margin-bottom:12px}
+h2{font-size:26px;margin:0}
+.sub{color:var(--soft);margin:0;font-size:16px}
+.grid{display:grid;grid-template-columns:minmax(300px,500px) 1fr;gap:18px;align-items:start}
 @media (max-width:860px){.grid{grid-template-columns:1fr}}
-.card{background:var(--card);border:2px solid var(--line);border-radius:16px;padding:20px}
+.card{background:var(--card);border:2px solid var(--line);border-radius:16px;padding:16px 18px}
 .card h3{margin:0 0 10px;font-size:20px}
 .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .btn{font:inherit;font-weight:600;padding:10px 16px;border-radius:10px;border:2px solid var(--ink);background:var(--card);color:var(--ink);cursor:pointer}
@@ -30,18 +31,20 @@ h2{font-size:30px;margin:0 0 4px}
 .btn:focus-visible,nav button:focus-visible,.key:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--coral);outline-offset:2px}
 .kval{font-family:var(--mono);font-size:40px;font-weight:700;min-width:150px;text-align:center}
 input[type=range]{flex:1;min-width:160px;accent-color:var(--teal)}
-textarea{width:100%;font-family:var(--mono);font-size:22px;padding:12px;border-radius:10px;border:2px solid var(--line);background:#fff;color:var(--ink);resize:vertical}
-.out{font-family:var(--mono);font-size:30px;font-weight:700;letter-spacing:2px;word-break:break-word;padding:14px 16px;border-radius:10px;background:var(--teal-t);border:2px solid var(--teal);min-height:64px}
+textarea{width:100%;font-family:var(--mono);font-size:20px;padding:10px 12px;border-radius:10px;border:2px solid var(--line);background:#fff;color:var(--ink);resize:vertical}
+.out{font-family:var(--mono);font-size:clamp(22px,3.4vh,30px);font-weight:700;letter-spacing:2px;word-break:break-word;padding:12px 16px;border-radius:10px;background:var(--teal-t);border:2px solid var(--teal);min-height:56px}
 .seg{display:inline-flex;border:2px solid var(--ink);border-radius:10px;overflow:hidden}
 .seg button{font:inherit;font-weight:600;padding:8px 14px;border:0;background:var(--card);color:var(--ink);cursor:pointer}
 .seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
 table{border-collapse:collapse;width:100%;font-family:var(--mono);font-size:18px}
 td{padding:4px 10px;border-bottom:1px solid var(--line);cursor:pointer}
 tr.cur td{background:var(--teal-t);font-weight:700}
-.wheel{width:100%;max-width:420px;display:block;margin:0 auto}
+.wheel{width:100%;max-width:min(420px,46vh);display:block;margin:0 auto}
+#bf{max-height:24vh;overflow:auto}
+.kval{font-size:clamp(28px,4.4vh,40px)}
 .wheel .inner{transition:transform .45s ease;transform-origin:210px 210px}
 .hint{font-size:15px;color:var(--soft)}
-.ctext{font-family:var(--mono);font-size:22px;line-height:1.9;letter-spacing:1px;word-break:break-word}
+.ctext{font-family:var(--mono);font-size:clamp(14px,2.2vh,21px);line-height:1.6;letter-spacing:1px;word-break:break-word}
 .ctext .c{color:#8A919C}
 .ctext .g{color:var(--teal);font-weight:800}
 .bars{display:flex;gap:6px;align-items:flex-end;overflow-x:auto;padding-bottom:6px}
@@ -52,17 +55,17 @@ tr.cur td{background:var(--teal-t);font-weight:700}
 .bcol input{width:36px;height:36px;text-align:center;font-family:var(--mono);font-size:20px;font-weight:800;text-transform:uppercase;border:2px solid var(--line);border-radius:8px;color:var(--teal);background:#fff;padding:0}
 .chips{display:flex;gap:6px;flex-wrap:wrap}
 .chip{font-family:var(--mono);font-weight:800;padding:4px 10px;border-radius:8px;background:var(--teal-t);border:2px solid var(--teal)}
-.rotors{display:flex;gap:14px;flex-wrap:wrap}
-.rotor{background:var(--purple-t);border:2px solid var(--purple);border-radius:14px;padding:10px 14px;text-align:center;min-width:110px}
+.rotors{display:flex;gap:12px;flex-wrap:wrap}
+.rotor{background:var(--purple-t);border:2px solid var(--purple);border-radius:14px;padding:8px 10px;text-align:center;min-width:100px}
 .rotor.refl{background:var(--coral-t);border-color:var(--coral)}
 .rotor .lbl{font-size:14px;color:var(--soft)}
-.rotor .win{font-family:var(--mono);font-size:40px;font-weight:800;margin:2px 0}
+.rotor .win{font-family:var(--mono);font-size:clamp(28px,4.2vh,40px);font-weight:800;margin:2px 0}
 .rotor .win.tick{animation:tick .35s ease}
 @keyframes tick{from{transform:translateY(-10px);opacity:.3}to{transform:none;opacity:1}}
 .kb{display:flex;flex-direction:column;gap:8px;align-items:center}
 .kb .krow{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
-.key{width:48px;height:48px;border-radius:50%;font-family:var(--mono);font-size:20px;font-weight:800;border:2px solid var(--ink);background:var(--card);color:var(--ink);cursor:pointer}
-.lamp{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:19px;font-weight:800;background:#2A3442;color:#7A8494;transition:background .15s,color .15s}
+.key{width:clamp(34px,5vh,48px);height:clamp(34px,5vh,48px);border-radius:50%;font-family:var(--mono);font-size:20px;font-weight:800;border:2px solid var(--ink);background:var(--card);color:var(--ink);cursor:pointer}
+.lamp{width:clamp(34px,4.8vh,44px);height:clamp(34px,4.8vh,44px);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:19px;font-weight:800;background:#2A3442;color:#7A8494;transition:background .15s,color .15s}
 .lamp.on{background:#F2C14E;color:var(--ink);box-shadow:0 0 18px #F2C14E}
 .lampboard{background:var(--ink);border-radius:16px;padding:14px}
 .path{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-family:var(--mono);font-size:18px}
@@ -74,7 +77,11 @@ tr.cur td{background:var(--teal-t);font-weight:700}
 .stat{font-size:20px}
 .stat b{font-family:var(--mono)}
 .big0{color:var(--teal);font-weight:800}
-.foot{margin-top:28px;font-size:14px;color:var(--soft)}
+.foot{margin-top:10px;font-size:13px;color:var(--soft)}
+.kb{gap:6px}
+.lampboard{padding:10px}
+.path{font-size:16px}
+.lines{font-size:20px}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 </style>
 </head>
@@ -93,8 +100,8 @@ tr.cur td{background:var(--teal-t);font-weight:700}
 <main>
 
 <section id="v-caesar" class="view active" aria-labelledby="h-caesar">
-<h2 id="h-caesar">Cäsar-Rad</h2>
-<p class="sub">Außen der Klartext, innen der Geheimtext. Drehen Sie den Schlüssel k.</p>
+<div class="vhead"><h2 id="h-caesar">Cäsar-Rad</h2>
+<p class="sub">Außen der Klartext, innen der Geheimtext. Drehen Sie den Schlüssel k.</p></div>
 <div class="grid">
 <div class="card">
 <svg class="wheel" viewBox="0 0 420 420" role="img" aria-label="Cäsar-Rad: äußerer Ring Klartext, innerer Ring Geheimtext, um k verschoben">
@@ -123,47 +130,47 @@ tr.cur td{background:var(--teal-t);font-weight:700}
 </div>
 </div>
 <p class="hint" id="inlabel" style="margin:10px 0 6px">Geheimtext eingeben:</p>
-<textarea id="cin" rows="2" aria-labelledby="inlabel">GSVVUYWWOX SW COWSXKB</textarea>
+<textarea id="cin" rows="1" aria-labelledby="inlabel">GSVVUYWWOX SW COWSXKB</textarea>
 <p class="hint" id="outlabel" style="margin:14px 0 6px">Entschlüsselt mit k = 0:</p>
 <div class="out" id="cout" aria-live="polite"></div>
 <div class="row" style="margin-top:16px">
 <div class="kval" id="kbig">k = 0</div>
 <button class="btn primary" id="bfbtn" aria-expanded="false">Alle 26 Schlüssel zeigen (Brute Force)</button>
 </div>
-<div id="bf" style="display:none;margin-top:12px;max-height:420px;overflow:auto"><table id="bftable" aria-label="Alle 26 Entschlüsselungen"></table></div>
+<div id="bf" style="display:none;margin-top:12px"><table id="bftable" aria-label="Alle 26 Entschlüsselungen"></table></div>
 </div>
 </div>
 </section>
 
 <section id="v-haeufigkeit" class="view" aria-labelledby="h-hf">
-<h2 id="h-hf">Häufigkeitsanalyse</h2>
-<p class="sub">Ein Geheimtext mit Substitutionschiffre. Zählen, raten, einsetzen – grün ist schon geraten.</p>
+<div class="vhead"><h2 id="h-hf">Häufigkeitsanalyse</h2>
+<p class="sub">Ein Geheimtext mit Substitutionschiffre. Zählen, raten, einsetzen – grün ist schon geraten.</p></div>
 <div class="card">
-<h3>Geheimtext</h3>
+<h3 style="margin-bottom:6px">Geheimtext</h3>
 <div class="ctext" id="ctext" aria-live="polite"></div>
 </div>
-<div class="card" style="margin-top:18px">
+<div class="card" style="margin-top:12px">
 <div class="row" style="justify-content:space-between">
 <h3 style="margin:0">Häufigkeit im Geheimtext · darunter Ihre Vermutung</h3>
 <span class="hint" id="score"></span>
 </div>
-<div class="bars" id="bars" style="margin-top:12px"></div>
-<div class="row" style="margin-top:14px">
-<span class="hint">Deutsch, häufigste zuerst:</span>
-<div class="chips"><span class="chip">E</span><span class="chip">N</span><span class="chip">I</span><span class="chip">S</span><span class="chip">R</span><span class="chip">A</span><span class="chip">T</span><span class="chip">D</span><span class="chip">H</span><span class="chip">U</span></div>
-</div>
-<div class="row" style="margin-top:16px">
+<div class="bars" id="bars" style="margin-top:8px"></div>
+<div class="row" style="margin-top:10px;justify-content:space-between">
+<div class="row"><span class="hint">Deutsch, häufigste zuerst:</span>
+<div class="chips"><span class="chip">E</span><span class="chip">N</span><span class="chip">I</span><span class="chip">S</span><span class="chip">R</span><span class="chip">A</span><span class="chip">T</span><span class="chip">D</span><span class="chip">H</span><span class="chip">U</span></div></div>
+<div class="row">
 <button class="btn primary" id="tipE">Tipp: Häufigster = E</button>
-<button class="btn" id="tipNext">Nächster richtiger Buchstabe</button>
+<button class="btn" id="tipNext">Nächster richtiger</button>
 <button class="btn" id="hfReset">Zurücksetzen</button>
-<button class="btn" id="hfSolve">Lösung zeigen</button>
+<button class="btn" id="hfSolve">Lösung</button>
+</div>
 </div>
 </div>
 </section>
 
 <section id="v-enigma" class="view" aria-labelledby="h-en">
-<h2 id="h-en">Enigma</h2>
-<p class="sub">Drücken Sie eine Taste (Maus oder Tastatur). Die Lampe zeigt den Geheimtextbuchstaben.</p>
+<div class="vhead"><h2 id="h-en">Enigma</h2>
+<p class="sub">Drücken Sie eine Taste (Maus oder Tastatur). Die Lampe zeigt den Geheimtextbuchstaben.</p></div>
 <div class="grid">
 <div class="card">
 <h3>Walzen und Reflektor</h3>
@@ -271,12 +278,17 @@ const barsEl = document.getElementById("bars");
 order.forEach(ch=>{
   const col = document.createElement("div"); col.className="bcol";
   const n = document.createElement("span"); n.className="bcount"; n.textContent = counts[ch];
-  const bar = document.createElement("div"); bar.className="bar"; bar.style.height = Math.max(4, Math.round(150*counts[ch]/maxc))+"px";
+  const bar = document.createElement("div"); bar.className="bar"; bar.dataset.n = counts[ch];
   const l = document.createElement("span"); l.className="blet"; l.textContent = ch;
   const inp = document.createElement("input"); inp.maxLength = 1; inp.dataset.c = ch; inp.setAttribute("aria-label","Vermutung für Geheimtextbuchstabe "+ch);
   inp.addEventListener("input", ()=>{ const v = norm(inp.value).replace(/[^A-Z]/g,""); inp.value = v; if(v) guess[ch]=v; else delete guess[ch]; renderHF(); });
   col.append(n,bar,l,inp); barsEl.appendChild(col);
 });
+function sizeBars(){
+  const top = Math.max(40, Math.min(150, Math.round(window.innerHeight*0.13)));
+  barsEl.querySelectorAll(".bar").forEach(b=>{ b.style.height = Math.max(4, Math.round(top*(+b.dataset.n)/maxc))+"px"; });
+}
+sizeBars(); window.addEventListener("resize", sizeBars);
 function renderHF(){
   const out = document.getElementById("ctext"); out.innerHTML = "";
   for(const ch of CIPHER){
