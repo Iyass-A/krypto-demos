@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Live-Demos: Klassische Kryptographie</title>
+<style>
+:root{--paper:#F6F4EE;--paper2:#ECE8DE;--card:#FBFAF6;--ink:#1B2430;--soft:#4A5160;--line:#CFC8B8;--teal:#146B53;--teal-t:#D7EEE5;--coral:#B8461F;--coral-t:#F6DDD2;--purple:#4B3FA0;--purple-t:#E3E0F7;--mono:ui-monospace,"JetBrains Mono",Consolas,"Courier New",monospace}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:18px;line-height:1.45}
+header{background:var(--ink);color:var(--paper);padding:16px 24px;display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;justify-content:space-between}
+header h1{font-size:20px;margin:0;font-weight:600}
+header p{margin:0;font-size:14px;color:#C9D3DC}
+nav{display:flex;gap:8px;flex-wrap:wrap}
+nav button{font:inherit;font-size:16px;font-weight:600;padding:10px 18px;border-radius:999px;border:2px solid #3A4658;background:transparent;color:var(--paper);cursor:pointer}
+nav button[aria-selected="true"]{background:var(--paper);color:var(--ink);border-color:var(--paper)}
+main{max-width:1240px;margin:0 auto;padding:24px}
+section.view{display:none}
+section.view.active{display:block}
+h2{font-size:30px;margin:0 0 4px}
+.sub{color:var(--soft);margin:0 0 20px}
+.grid{display:grid;grid-template-columns:minmax(300px,440px) 1fr;gap:24px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card);border:2px solid var(--line);border-radius:16px;padding:20px}
+.card h3{margin:0 0 10px;font-size:20px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.btn{font:inherit;font-weight:600;padding:10px 16px;border-radius:10px;border:2px solid var(--ink);background:var(--card);color:var(--ink);cursor:pointer}
+.btn.primary{background:var(--teal);border-color:var(--teal);color:var(--paper)}
+.btn.small{padding:6px 12px;font-size:15px}
+.btn:focus-visible,nav button:focus-visible,.key:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--coral);outline-offset:2px}
+.kval{font-family:var(--mono);font-size:40px;font-weight:700;min-width:150px;text-align:center}
+input[type=range]{flex:1;min-width:160px;accent-color:var(--teal)}
+textarea{width:100%;font-family:var(--mono);font-size:22px;padding:12px;border-radius:10px;border:2px solid var(--line);background:#fff;color:var(--ink);resize:vertical}
+.out{font-family:var(--mono);font-size:30px;font-weight:700;letter-spacing:2px;word-break:break-word;padding:14px 16px;border-radius:10px;background:var(--teal-t);border:2px solid var(--teal);min-height:64px}
+.seg{display:inline-flex;border:2px solid var(--ink);border-radius:10px;overflow:hidden}
+.seg button{font:inherit;font-weight:600;padding:8px 14px;border:0;background:var(--card);color:var(--ink);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+table{border-collapse:collapse;width:100%;font-family:var(--mono);font-size:18px}
+td{padding:4px 10px;border-bottom:1px solid var(--line);cursor:pointer}
+tr.cur td{background:var(--teal-t);font-weight:700}
+.wheel{width:100%;max-width:420px;display:block;margin:0 auto}
+.wheel .inner{transition:transform .45s ease;transform-origin:210px 210px}
+.hint{font-size:15px;color:var(--soft)}
+.ctext{font-family:var(--mono);font-size:22px;line-height:1.9;letter-spacing:1px;word-break:break-word}
+.ctext .c{color:#8A919C}
+.ctext .g{color:var(--teal);font-weight:800}
+.bars{display:flex;gap:6px;align-items:flex-end;overflow-x:auto;padding-bottom:6px}
+.bcol{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:38px}
+.bar{width:28px;background:var(--coral);border-radius:6px 6px 0 0}
+.bcount{font-size:13px;color:var(--soft)}
+.blet{font-family:var(--mono);font-weight:800;font-size:20px}
+.bcol input{width:36px;height:36px;text-align:center;font-family:var(--mono);font-size:20px;font-weight:800;text-transform:uppercase;border:2px solid var(--line);border-radius:8px;color:var(--teal);background:#fff;padding:0}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{font-family:var(--mono);font-weight:800;padding:4px 10px;border-radius:8px;background:var(--teal-t);border:2px solid var(--teal)}
+.rotors{display:flex;gap:14px;flex-wrap:wrap}
+.rotor{background:var(--purple-t);border:2px solid var(--purple);border-radius:14px;padding:10px 14px;text-align:center;min-width:110px}
+.rotor.refl{background:var(--coral-t);border-color:var(--coral)}
+.rotor .lbl{font-size:14px;color:var(--soft)}
+.rotor .win{font-family:var(--mono);font-size:40px;font-weight:800;margin:2px 0}
+.rotor .win.tick{animation:tick .35s ease}
+@keyframes tick{from{transform:translateY(-10px);opacity:.3}to{transform:none;opacity:1}}
+.kb{display:flex;flex-direction:column;gap:8px;align-items:center}
+.kb .krow{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.key{width:48px;height:48px;border-radius:50%;font-family:var(--mono);font-size:20px;font-weight:800;border:2px solid var(--ink);background:var(--card);color:var(--ink);cursor:pointer}
+.lamp{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:19px;font-weight:800;background:#2A3442;color:#7A8494;transition:background .15s,color .15s}
+.lamp.on{background:#F2C14E;color:var(--ink);box-shadow:0 0 18px #F2C14E}
+.lampboard{background:var(--ink);border-radius:16px;padding:14px}
+.path{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-family:var(--mono);font-size:18px}
+.path .p{padding:4px 8px;border-radius:8px;background:var(--card);border:2px solid var(--line);font-weight:800}
+.path .s{color:var(--soft);font-size:14px}
+.path .p.in{border-color:var(--teal);background:var(--teal-t)}
+.path .p.outp{border-color:var(--coral);background:var(--coral-t)}
+.lines{font-family:var(--mono);font-size:22px;letter-spacing:2px;word-break:break-all}
+.stat{font-size:20px}
+.stat b{font-family:var(--mono)}
+.big0{color:var(--teal);font-weight:800}
+.foot{margin-top:28px;font-size:14px;color:var(--soft)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+<header>
+<div>
+<h1>Live-Demos · Einführung und klassische Kryptographie</h1>
+<p>Seminar Kryptographie/Komplexität · Iyass Alnajm · funktioniert auch offline</p>
+</div>
+<nav aria-label="Demo wählen">
+<button data-view="caesar" aria-selected="true">1 · Cäsar-Rad</button>
+<button data-view="haeufigkeit" aria-selected="false">2 · Häufigkeitsanalyse</button>
+<button data-view="enigma" aria-selected="false">3 · Enigma</button>
+</nav>
+</header>
+<main>
+
+<section id="v-caesar" class="view active" aria-labelledby="h-caesar">
+<h2 id="h-caesar">Cäsar-Rad</h2>
+<p class="sub">Außen der Klartext, innen der Geheimtext. Drehen Sie den Schlüssel k.</p>
+<div class="grid">
+<div class="card">
+<svg class="wheel" viewBox="0 0 420 420" role="img" aria-label="Cäsar-Rad: äußerer Ring Klartext, innerer Ring Geheimtext, um k verschoben">
+<circle cx="210" cy="210" r="205" fill="#FBFAF6" stroke="#CFC8B8" stroke-width="2"/>
+<circle cx="210" cy="210" r="160" fill="#D7EEE5" stroke="#146B53" stroke-width="2"/>
+<circle cx="210" cy="210" r="112" fill="#FBFAF6" stroke="#CFC8B8" stroke-width="2"/>
+<path d="M 196 4 L 224 4 L 210 26 Z" fill="#B8461F"/>
+<g id="outer"></g>
+<g id="inner" class="inner"></g>
+<text x="210" y="205" text-anchor="middle" font-family="ui-monospace,Consolas,monospace" font-size="20" fill="#4A5160">k =</text>
+<text id="wheelk" x="210" y="245" text-anchor="middle" font-family="ui-monospace,Consolas,monospace" font-size="44" font-weight="800" fill="#1B2430">10</text>
+</svg>
+<div class="row" style="margin-top:14px">
+<button class="btn" id="kminus" aria-label="Schlüssel um eins verringern">− 1</button>
+<input type="range" id="kslider" min="0" max="25" value="0" aria-label="Schlüssel k">
+<button class="btn" id="kplus" aria-label="Schlüssel um eins erhöhen">+ 1</button>
+</div>
+<p class="hint">Oben am roten Pfeil: Klartextbuchstabe außen → Geheimtextbuchstabe innen.</p>
+</div>
+<div class="card">
+<div class="row" style="justify-content:space-between">
+<h3 style="margin:0">Text</h3>
+<div class="seg" role="group" aria-label="Richtung">
+<button id="mdec" aria-pressed="true">Entschlüsseln</button>
+<button id="menc" aria-pressed="false">Verschlüsseln</button>
+</div>
+</div>
+<p class="hint" id="inlabel" style="margin:10px 0 6px">Geheimtext eingeben:</p>
+<textarea id="cin" rows="2" aria-labelledby="inlabel">GSVVUYWWOX SW COWSXKB</textarea>
+<p class="hint" id="outlabel" style="margin:14px 0 6px">Entschlüsselt mit k = 0:</p>
+<div class="out" id="cout" aria-live="polite"></div>
+<div class="row" style="margin-top:16px">
+<div class="kval" id="kbig">k = 0</div>
+<button class="btn primary" id="bfbtn" aria-expanded="false">Alle 26 Schlüssel zeigen (Brute Force)</button>
+</div>
+<div id="bf" style="display:none;margin-top:12px;max-height:420px;overflow:auto"><table id="bftable" aria-label="Alle 26 Entschlüsselungen"></table></div>
+</div>
+</div>
+</section>
+
+<section id="v-haeufigkeit" class="view" aria-labelledby="h-hf">
+<h2 id="h-hf">Häufigkeitsanalyse</h2>
+<p class="sub">Ein Geheimtext mit Substitutionschiffre. Zählen, raten, einsetzen – grün ist schon geraten.</p>
+<div class="card">
+<h3>Geheimtext</h3>
+<div class="ctext" id="ctext" aria-live="polite"></div>
+</div>
+<div class="card" style="margin-top:18px">
+<div class="row" style="justify-content:space-between">
+<h3 style="margin:0">Häufigkeit im Geheimtext · darunter Ihre Vermutung</h3>
+<span class="hint" id="score"></span>
+</div>
+<div class="bars" id="bars" style="margin-top:12px"></div>
+<div class="row" style="margin-top:14px">
+<span class="hint">Deutsch, häufigste zuerst:</span>
+<div class="chips"><span class="chip">E</span><span class="chip">N</span><span class="chip">I</span><span class="chip">S</span><span class="chip">R</span><span class="chip">A</span><span class="chip">T</span><span class="chip">D</span><span class="chip">H</span><span class="chip">U</span></div>
+</div>
+<div class="row" style="margin-top:16px">
+<button class="btn primary" id="tipE">Tipp: Häufigster = E</button>
+<button class="btn" id="tipNext">Nächster richtiger Buchstabe</button>
+<button class="btn" id="hfReset">Zurücksetzen</button>
+<button class="btn" id="hfSolve">Lösung zeigen</button>
+</div>
+</div>
+</section>
+
+<section id="v-enigma" class="view" aria-labelledby="h-en">
+<h2 id="h-en">Enigma</h2>
+<p class="sub">Drücken Sie eine Taste (Maus oder Tastatur). Die Lampe zeigt den Geheimtextbuchstaben.</p>
+<div class="grid">
+<div class="card">
+<h3>Walzen und Reflektor</h3>
+<div class="rotors" id="rotors"></div>
+<p class="hint" style="margin:10px 0 0">Walze 1 dreht sich bei jedem Tastendruck – wie ein Zähler.</p>
+<h3 style="margin-top:18px">Stromweg des letzten Buchstabens</h3>
+<div class="path" id="path"><span class="s">noch keine Taste gedrückt</span></div>
+<div class="stat" style="margin-top:18px">Tastendrücke: <b id="presses">0</b> · davon zu sich selbst verschlüsselt: <b id="selfcount" class="big0">0</b></div>
+<p class="hint" style="margin:4px 0 0">Bleibt immer 0: Die Enigma ist fixpunktfrei.</p>
+</div>
+<div class="card">
+<div class="lampboard" aria-label="Lampenfeld"><div class="kb" id="lamps"></div></div>
+<div class="kb" id="keys" style="margin-top:16px" aria-label="Tastatur"></div>
+<div class="lines" style="margin-top:16px">
+<div><span class="hint" style="letter-spacing:0">Eingabe:</span> <span id="ptxt"></span></div>
+<div><span class="hint" style="letter-spacing:0">Ausgabe:</span> <span id="ctxt" style="color:var(--coral);font-weight:800"></span></div>
+</div>
+<div class="row" style="margin-top:16px">
+<button class="btn" id="enReset">Zurück auf Startstellung</button>
+<button class="btn primary" id="enReplay">Ausgabe zurück eintippen (selbstinvers)</button>
+</div>
+<p class="sr" id="enlive" aria-live="polite"></p>
+</div>
+</div>
+<p class="foot">Vereinfachtes Modell der Enigma I: Walze 1 (α) = Walze III, Walze 2 (β) = Walze II, Walze 3 (γ) = Walze I, Reflektor (δ) = Umkehrwalze B, Ringstellung A, ohne Steckerbrett. Startstellung mit ▲ ▼ wählen.</p>
+</section>
+
+</main>
+<script>
+const A = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const idx = ch => A.indexOf(ch);
+const norm = s => s.toUpperCase().replace(/Ä/g,"AE").replace(/Ö/g,"OE").replace(/Ü/g,"UE").replace(/ß/g,"SS");
+
+/* Ansicht über #hash */
+const views = ["caesar","haeufigkeit","enigma"];
+function show(v){
+  if(!views.includes(v)) v = "caesar";
+  views.forEach(x=>{
+    document.getElementById("v-"+x).classList.toggle("active", x===v);
+    document.querySelector('nav button[data-view="'+x+'"]').setAttribute("aria-selected", x===v ? "true":"false");
+  });
+}
+document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>{ const v=b.dataset.view; try{ history.replaceState(null,"","#"+v);}catch(e){ location.hash=v; } show(v); }));
+window.addEventListener("hashchange",()=>show(location.hash.slice(1)));
+show(location.hash.slice(1));
+
+/* ---------- 1. Cäsar ---------- */
+const SVGNS = "http://www.w3.org/2000/svg";
+function ring(g, r, size, color, weight){
+  for(let i=0;i<26;i++){
+    const a = i*2*Math.PI/26;
+    const x = 210 + r*Math.sin(a), y = 210 - r*Math.cos(a);
+    const t = document.createElementNS(SVGNS,"text");
+    t.setAttribute("x",x.toFixed(1)); t.setAttribute("y",y.toFixed(1));
+    t.setAttribute("text-anchor","middle"); t.setAttribute("dominant-baseline","central");
+    t.setAttribute("font-family","ui-monospace,Consolas,monospace"); t.setAttribute("font-size",size);
+    t.setAttribute("font-weight",weight); t.setAttribute("fill",color);
+    t.setAttribute("transform","rotate("+(i*360/26).toFixed(2)+" "+x.toFixed(1)+" "+y.toFixed(1)+")");
+    t.textContent = A[i]; g.appendChild(t);
+  }
+}
+ring(document.getElementById("outer"),183,22,"#1B2430",800);
+ring(document.getElementById("inner"),136,22,"#146B53",800);
+let k = 0, mode = "dec";
+const shift = (s,n) => norm(s).replace(/[A-Z]/g, ch => A[(idx(ch)+n%26+26)%26]);
+function renderCaesar(){
+  document.getElementById("inner").style.transform = "rotate("+(-k*360/26)+"deg)";
+  document.getElementById("wheelk").textContent = k;
+  document.getElementById("kbig").textContent = "k = "+k;
+  document.getElementById("kslider").value = k;
+  const inp = document.getElementById("cin").value;
+  document.getElementById("cout").textContent = shift(inp, mode==="dec" ? -k : k);
+  document.getElementById("outlabel").textContent = (mode==="dec" ? "Entschlüsselt" : "Verschlüsselt") + " mit k = " + k + ":";
+  document.getElementById("inlabel").textContent = mode==="dec" ? "Geheimtext eingeben:" : "Klartext eingeben:";
+  const tb = document.getElementById("bftable");
+  if(document.getElementById("bf").style.display !== "none"){
+    tb.innerHTML = "";
+    for(let j=0;j<26;j++){
+      const tr = document.createElement("tr"); if(j===k) tr.className="cur";
+      const td1 = document.createElement("td"); td1.textContent = "k = "+j;
+      const td2 = document.createElement("td"); td2.textContent = shift(inp, mode==="dec" ? -j : j);
+      tr.append(td1,td2); tr.addEventListener("click",()=>{ k=j; renderCaesar(); }); tb.appendChild(tr);
+    }
+  }
+}
+document.getElementById("kminus").onclick = ()=>{ k=(k+25)%26; renderCaesar(); };
+document.getElementById("kplus").onclick = ()=>{ k=(k+1)%26; renderCaesar(); };
+document.getElementById("kslider").oninput = e=>{ k=+e.target.value; renderCaesar(); };
+document.getElementById("cin").oninput = renderCaesar;
+document.getElementById("mdec").onclick = ()=>{ mode="dec"; document.getElementById("mdec").setAttribute("aria-pressed","true"); document.getElementById("menc").setAttribute("aria-pressed","false"); renderCaesar(); };
+document.getElementById("menc").onclick = ()=>{ mode="enc"; document.getElementById("menc").setAttribute("aria-pressed","true"); document.getElementById("mdec").setAttribute("aria-pressed","false"); renderCaesar(); };
+document.getElementById("bfbtn").onclick = ()=>{ const bf=document.getElementById("bf"); const open = bf.style.display==="none"; bf.style.display = open ? "block":"none"; document.getElementById("bfbtn").setAttribute("aria-expanded", open ? "true":"false"); renderCaesar(); };
+renderCaesar();
+
+/* ---------- 2. Häufigkeitsanalyse ---------- */
+const PLAIN = "DIE KRYPTOGRAPHIE IST SO ALT WIE DIE SCHRIFT. SCHON IN DER ANTIKE HABEN MENSCHEN GEHEIME NACHRICHTEN AUSGETAUSCHT. DER ARABISCHE GELEHRTE AL KINDI ERKANNTE IM NEUNTEN JAHRHUNDERT, DASS IN JEDER SPRACHE EINIGE BUCHSTABEN VIEL HAEUFIGER VORKOMMEN ALS ANDERE. IM DEUTSCHEN IST DAS E DER HAEUFIGSTE BUCHSTABE, DANACH FOLGEN N, I, S UND R. WER DIE ZEICHEN EINES GEHEIMTEXTES ZAEHLT, KANN DESHALB VIELE BUCHSTABEN ERRATEN UND DEN TEXT SCHRITT FUER SCHRITT ENTSCHLUESSELN.";
+const KEY = "HEWKSABOZTYJGICVRDPXMFUQNL";
+const CIPHER = PLAIN.replace(/[A-Z]/g, ch => KEY[idx(ch)]);
+const SOL = {}; for(let i=0;i<26;i++) SOL[KEY[i]] = A[i];
+const counts = {}; for(const ch of CIPHER) if(/[A-Z]/.test(ch)) counts[ch]=(counts[ch]||0)+1;
+const order = Object.keys(counts).sort((a,b)=>counts[b]-counts[a] || a.localeCompare(b));
+const maxc = counts[order[0]];
+let guess = {};
+const barsEl = document.getElementById("bars");
+order.forEach(ch=>{
+  const col = document.createElement("div"); col.className="bcol";
+  const n = document.createElement("span"); n.className="bcount"; n.textContent = counts[ch];
+  const bar = document.createElement("div"); bar.className="bar"; bar.style.height = Math.max(4, Math.round(150*counts[ch]/maxc))+"px";
+  const l = document.createElement("span"); l.className="blet"; l.textContent = ch;
+  const inp = document.createElement("input"); inp.maxLength = 1; inp.dataset.c = ch; inp.setAttribute("aria-label","Vermutung für Geheimtextbuchstabe "+ch);
+  inp.addEventListener("input", ()=>{ const v = norm(inp.value).replace(/[^A-Z]/g,""); inp.value = v; if(v) guess[ch]=v; else delete guess[ch]; renderHF(); });
+  col.append(n,bar,l,inp); barsEl.appendChild(col);
+});
+function renderHF(){
+  const out = document.getElementById("ctext"); out.innerHTML = "";
+  for(const ch of CIPHER){
+    const s = document.createElement("span");
+    if(/[A-Z]/.test(ch)){ if(guess[ch]){ s.className="g"; s.textContent=guess[ch]; } else { s.className="c"; s.textContent=ch; } }
+    else s.textContent = ch;
+    out.appendChild(s);
+  }
+  barsEl.querySelectorAll("input").forEach(i=>{ i.value = guess[i.dataset.c] || ""; });
+  const right = order.filter(c=>guess[c]===SOL[c]).length;
+  document.getElementById("score").textContent = right + " von " + order.length + " Buchstaben richtig";
+}
+document.getElementById("tipE").onclick = ()=>{ guess[order[0]]="E"; renderHF(); };
+document.getElementById("tipNext").onclick = ()=>{ const c = order.find(c=>guess[c]!==SOL[c]); if(c){ guess[c]=SOL[c]; renderHF(); } };
+document.getElementById("hfReset").onclick = ()=>{ guess={}; renderHF(); };
+document.getElementById("hfSolve").onclick = ()=>{ order.forEach(c=>guess[c]=SOL[c]); renderHF(); };
+renderHF();
+
+/* ---------- 3. Enigma ---------- */
+const W = { alpha:"BDFHJLCPRTXVZNYEIWGAKMUSQO", beta:"AJDKSIRUXBLHWTMCQGZNPYFVOE", gamma:"EKMFLGDQVZNTOWYHXUSPAIBRCJ" };
+const NOTCH = { alpha: idx("V"), beta: idx("E") };
+const REFL = "YRUHQSLDPXNGOKMIEBFZCWVJAT";
+const inv = w => { const r=[]; for(let i=0;i<26;i++) r[idx(w[i])]=A[i]; return r.join(""); };
+const WI = { alpha:inv(W.alpha), beta:inv(W.beta), gamma:inv(W.gamma) };
+let start = { alpha:0, beta:0, gamma:0 }, pos = { ...start };
+let presses = 0, selfc = 0, ptxt = "", ctxt = "", lastOut = null;
+const through = (w, p, x) => (idx(w[(x+p)%26]) - p + 26) % 26;
+function step(){
+  if(pos.beta === NOTCH.beta){ pos.gamma=(pos.gamma+1)%26; pos.beta=(pos.beta+1)%26; }
+  else if(pos.alpha === NOTCH.alpha){ pos.beta=(pos.beta+1)%26; }
+  pos.alpha=(pos.alpha+1)%26;
+}
+function encipher(ch){
+  step();
+  const steps = [];
+  let x = idx(ch); steps.push(["Taste",A[x]]);
+  x = through(W.alpha,pos.alpha,x); steps.push(["α",A[x]]);
+  x = through(W.beta,pos.beta,x); steps.push(["β",A[x]]);
+  x = through(W.gamma,pos.gamma,x); steps.push(["γ",A[x]]);
+  x = idx(REFL[x]); steps.push(["δ",A[x]]);
+  x = through(WI.gamma,pos.gamma,x); steps.push(["γ⁻¹",A[x]]);
+  x = through(WI.beta,pos.beta,x); steps.push(["β⁻¹",A[x]]);
+  x = through(WI.alpha,pos.alpha,x); steps.push(["α⁻¹",A[x]]);
+  return { out:A[x], steps };
+}
+const rotorsEl = document.getElementById("rotors");
+const RDEF = [["alpha","Walze 1 (α)"],["beta","Walze 2 (β)"],["gamma","Walze 3 (γ)"]];
+RDEF.forEach(([key,label])=>{
+  const d = document.createElement("div"); d.className="rotor";
+  d.innerHTML = '<div class="lbl">'+label+'</div>';
+  const up = document.createElement("button"); up.className="btn small"; up.textContent="▲"; up.setAttribute("aria-label",label+" eins weiter");
+  const win = document.createElement("div"); win.className="win"; win.id="win-"+key;
+  const dn = document.createElement("button"); dn.className="btn small"; dn.textContent="▼"; dn.setAttribute("aria-label",label+" eins zurück");
+  up.onclick = ()=>{ start[key]=(start[key]+1)%26; resetEnigma(); };
+  dn.onclick = ()=>{ start[key]=(start[key]+25)%26; resetEnigma(); };
+  d.append(up,win,dn); rotorsEl.appendChild(d);
+});
+const rf = document.createElement("div"); rf.className="rotor refl"; rf.innerHTML='<div class="lbl">Reflektor (δ)</div><div class="win">B</div><div class="lbl">fest</div>'; rotorsEl.appendChild(rf);
+const LAYOUT = ["QWERTZUIO","ASDFGHJK","PYXCVBNML"];
+const lampsEl = document.getElementById("lamps"), keysEl = document.getElementById("keys");
+LAYOUT.forEach(r=>{
+  const lr = document.createElement("div"); lr.className="krow";
+  const kr = document.createElement("div"); kr.className="krow";
+  for(const ch of r){
+    const l = document.createElement("div"); l.className="lamp"; l.id="lamp-"+ch; l.textContent=ch; lr.appendChild(l);
+    const b = document.createElement("button"); b.className="key"; b.textContent=ch; b.setAttribute("aria-label","Taste "+ch); b.onclick=()=>press(ch); kr.appendChild(b);
+  }
+  lampsEl.appendChild(lr); keysEl.appendChild(kr);
+});
+function renderRotors(tick){
+  RDEF.forEach(([key])=>{ const w=document.getElementById("win-"+key); const v=A[pos[key]]; if(w.textContent!==v && tick){ w.classList.remove("tick"); void w.offsetWidth; w.classList.add("tick"); } w.textContent=v; });
+}
+function press(ch){
+  const r = encipher(ch);
+  presses++; if(r.out===ch) selfc++;
+  ptxt += ch; ctxt += r.out;
+  if(lastOut) document.getElementById("lamp-"+lastOut).classList.remove("on");
+  document.getElementById("lamp-"+r.out).classList.add("on"); lastOut = r.out;
+  const p = document.getElementById("path"); p.innerHTML = "";
+  r.steps.forEach(([lab,letter],i)=>{
+    if(i>0){ const s=document.createElement("span"); s.className="s"; s.textContent="→ "+lab+" →"; p.appendChild(s); }
+    const c=document.createElement("span"); c.className="p"+(i===0?" in":""); c.textContent=letter; p.appendChild(c);
+  });
+  const s=document.createElement("span"); s.className="s"; s.textContent="→ Lampe"; p.appendChild(s);
+  const o=document.createElement("span"); o.className="p outp"; o.textContent=r.out; p.appendChild(o);
+  document.getElementById("presses").textContent = presses;
+  document.getElementById("selfcount").textContent = selfc;
+  document.getElementById("ptxt").textContent = ptxt;
+  document.getElementById("ctxt").textContent = ctxt;
+  document.getElementById("enlive").textContent = ch+" wird zu "+r.out;
+  renderRotors(true);
+}
+function resetEnigma(){
+  pos = { ...start }; presses=0; selfc=0; ptxt=""; ctxt="";
+  if(lastOut) document.getElementById("lamp-"+lastOut).classList.remove("on"); lastOut=null;
+  document.getElementById("path").innerHTML='<span class="s">noch keine Taste gedrückt</span>';
+  ["presses","selfcount"].forEach(i=>document.getElementById(i).textContent="0");
+  document.getElementById("ptxt").textContent=""; document.getElementById("ctxt").textContent="";
+  renderRotors(false);
+}
+document.getElementById("enReset").onclick = resetEnigma;
+document.getElementById("enReplay").onclick = ()=>{
+  const c = ctxt; if(!c) return; resetEnigma();
+  let i = 0; const t = setInterval(()=>{ if(i>=c.length){ clearInterval(t); return; } press(c[i++]); }, 350);
+};
+document.addEventListener("keydown", e=>{
+  if(!document.getElementById("v-enigma").classList.contains("active")) return;
+  const tag = (e.target.tagName||"").toLowerCase(); if(tag==="input"||tag==="textarea") return;
+  const ch = e.key.length===1 ? e.key.toUpperCase() : ""; if(ch && A.includes(ch) && !e.ctrlKey && !e.metaKey && !e.altKey){ e.preventDefault(); press(ch); }
+});
+resetEnigma();
+</script>
+</body>
+</html>
